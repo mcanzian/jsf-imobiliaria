@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/WEB-INF/templates/master.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="menu">
+		<ui:include src="/inserts/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<div style="width: 90%; margin: 0 auto;">
+			<h:form id="formTabelaUF">
+				<p:dataTable id="tabelaUF" value="#{ufBean.lista}"
+					filteredValue="#{ufBean.listaFiltrada}" var="item"
+					widgetVar="dataTableUF" paginator="true" rows="10"
+					emptyMessage="Nenhum registro encontrado.">
+
+					<f:facet name="header">
+						Tabela de UFs
+					</f:facet>
+
+					<p:column headerText="Código" width="60"
+						style="text-align: center;" sortBy="#{item.id}"
+						filterBy="#{item.id}" filterStyle="width: 50px;">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Nome" sortBy="#{item.nome}"
+						filterBy="#{item.nome}" filterStyle="width: 400px;">
+						<h:outputText value="#{item.nome}" />
+					</p:column>
+
+					<p:column headerText="Sigla" width="60" style="text-align: center;"
+						sortBy="#{item.sigla}" filterBy="#{item.sigla}"
+						filterStyle="width: 50px;">
+						<h:outputText value="#{item.sigla}" />
+					</p:column>
+
+					<p:column headerText="Opções" width="155">
+						<p:commandButton value="Editar" icon="ui-icon-pencil"
+							onclick="PF('editar').show();"
+							update=":formModalEditar:modalEditar">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{ufBean.uf}" />
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+						<p:commandButton value="Excluir" icon="ui-icon-trash"
+							onclick="PF('excluir').show();"
+							update=":formModalExcluir:modalExcluir">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{ufBean.uf}" />
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="Novo" icon="ui-icon-plus"
+							actionListener="#{ufBean.novo()}"
+							oncomplete="PF('salvar').show();"
+							update=":formModalSalvar:modalSalvar">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+						<p:commandButton value="Pesquisar" icon="ui-icon-search"
+							styleClass="filter" />
+					</f:facet>
+					
+				</p:dataTable>
+			</h:form>
+		</div>
+
+		<p:dialog widgetVar="salvar" appendTo="@(body)" header="Novo UF"
+			modal="true" resizable="false">
+			<h:form id="formModalSalvar" prependId="false">
+				<h:panelGrid id="modalSalvar" columns="2">
+					<p:outputLabel for="nNome" value="Nome" />
+					<p:inputText id="nNome" value="#{ufBean.uf.nome}" size="50"
+						maxlength="50" required="true"
+						requiredMessage="Nome deve ser informado" />
+					<div />
+					<p:message for="nNome" />
+
+					<p:outputLabel for="nSigla" value="Sigla" />
+					<p:inputText id="nSigla" value="#{ufBean.uf.sigla}" size="5"
+						maxlength="2" required="true"
+						requiredMessage="Sigla deve ser informado" />
+					<div />
+					<p:message for="nSigla" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('salvar').hide();" />
+					
+					<p:commandButton value="Salvar" actionListener="#{ufBean.salvar()}"
+						oncomplete="PF('dataTableUF').clearFilters(); hideDialogOnSuccess(args, PF('salvar'));"
+						update=":formTabelaUF:tabelaUF :formModalSalvar :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="editar" appendTo="@(body)" header="Editar UF"
+			modal="true" resizable="false">
+			<h:form id="formModalEditar" prependId="false">
+				<h:panelGrid id="modalEditar" columns="2">
+					<p:outputLabel for="eNome" value="Nome" />
+					<p:inputText id="eNome" value="#{ufBean.uf.nome}" size="50"
+						maxlength="50" required="true"
+						requiredMessage="Nome deve ser informado" />
+					<div />
+					<p:message for="eNome" />
+
+					<p:outputLabel for="eSigla" value="Sigla" />
+					<p:inputText id="eSigla" value="#{ufBean.uf.sigla}" size="5"
+						maxlength="2" required="true"
+						requiredMessage="Sigla deve ser informado" />
+					<div />
+					<p:message for="eSigla" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('editar').hide();" />
+					<p:commandButton value="Editar" actionListener="#{ufBean.editar()}"
+						oncomplete="PF('dataTableUF').clearFilters(); hideDialogOnSuccess(args, PF('editar'));"
+						update=":formTabelaUF:tabelaUF :formModalEditar :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="excluir" appendTo="@(body)" header="Editar UF"
+			modal="true" resizable="false">
+			<h:form id="formModalExcluir">
+				<h:panelGrid id="modalExcluir" columns="2">
+					<p:outputLabel value="Nome" />
+					<p:outputLabel value="#{ufBean.uf.nome}" />
+
+					<p:outputLabel value="Sigla" />
+					<p:outputLabel value="#{ufBean.uf.sigla}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('excluir').hide();" />
+					<p:commandButton value="Excluir"
+						actionListener="#{ufBean.excluir()}"
+						oncomplete="PF('excluir').hide(); PF('dataTableUF').clearFilters();"
+						update=":formTabelaUF:tabelaUF :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

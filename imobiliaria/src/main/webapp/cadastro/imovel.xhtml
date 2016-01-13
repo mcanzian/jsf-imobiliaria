@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/WEB-INF/templates/master.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="menu">
+		<ui:include src="/inserts/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<div style="width: 90%; margin: 0 auto;">
+			<h:form id="formTabelaImovel">
+				<p:dataTable id="tabelaImovel" value="#{imovelBean.lista}"
+					filteredValue="#{imovelBean.listaFiltrada}" var="item"
+					widgetVar="dataTableImovel" paginator="true" rows="10"
+					emptyMessage="Nenhum registro encontrado.">
+
+					<f:facet name="header">
+						Tabela de Imóveis
+					</f:facet>
+
+					<p:column headerText="Código" width="60"
+						style="text-align: center;" sortBy="#{item.id}"
+						filterBy="#{item.id}" filterStyle="width: 50px;">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Tipo de Imóvel" width="100"
+						sortBy="#{item.tipo}" filterBy="#{item.tipo}"
+						filterStyle="width: 90px;">
+						<h:outputText value="#{item.tipo}" />
+					</p:column>
+
+					<p:column headerText="Quartos" width="60"
+						style="text-align: center;" sortBy="#{item.quartos}"
+						filterBy="#{item.quartos}" filterStyle="width: 50px;">
+						<h:outputText value="#{item.quartos}" />
+					</p:column>
+
+					<p:column headerText="Banheiros" width="60"
+						style="text-align: center;" sortBy="#{item.banheiros}"
+						filterBy="#{item.banheiros}" filterStyle="width: 50px;">
+						<h:outputText value="#{item.banheiros}" />
+					</p:column>
+
+					<p:column headerText="Bairro" width="120"
+						sortBy="#{item.bairro.nome}" filterBy="#{item.bairro.nome}"
+						filterStyle="width: 90px;">
+						<h:outputText value="#{item.bairro.nome}" />
+					</p:column>
+
+					<p:column headerText="Cidade" width="120"
+						sortBy="#{item.bairro.cidade.nome}"
+						filterBy="#{item.bairro.cidade.nome}" filterStyle="width: 90px;">
+						<h:outputText value="#{item.bairro.cidade.nome}" />
+					</p:column>
+
+					<p:column headerText="UF" width="60" style="text-align: center;"
+						sortBy="#{item.bairro.cidade.uf.sigla}"
+						filterBy="#{item.bairro.cidade.uf.sigla}"
+						filterStyle="width: 50px;">
+						<h:outputText value="#{item.bairro.cidade.uf.sigla}" />
+					</p:column>
+
+					<p:column headerText="Opções" width="90">
+						<p:commandButton value="Ver" icon="ui-icon-document"
+							oncomplete="PF('ver').show();" update=":formModalVer:modalVer">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{imovelBean.imovel}" />
+						</p:commandButton>
+
+						<p:commandButton value="Excluir" icon="ui-icon-trash"
+							oncomplete="PF('excluir').show();"
+							update=":formModalExcluir:modalExcluir">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{imovelBean.imovel}" />
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="Novo" icon="ui-icon-plus"
+							actionListener="#{imovelBean.novo()}"
+							oncomplete="PF('salvar').show();"
+							update=":formModalSalvar:modalSalvar">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+						<p:commandButton value="Pesquisar" icon="ui-icon-search"
+							styleClass="filter" />
+					</f:facet>
+
+				</p:dataTable>
+			</h:form>
+		</div>
+
+		<p:dialog widgetVar="ver" appendTo="@(body)" header="Ver Imóvel"
+			modal="true" resizable="false">
+			<h:form id="formModalVer">
+				<h:panelGrid id="modalVer" columns="2">
+					<p:outputLabel for="vTipoImovel" value="Tipo do Imóvel" />
+					<h:outputText id="vTipoImovel" value="#{imovelBean.imovel.tipo}" />
+
+					<p:outputLabel for="vCondominio" value="Condomínio" />
+					<h:outputText id="vCondominio"
+						value="#{imovelBean.imovel.condominio == true ? 'Sim' : 'Não'}" />
+
+					<p:outputLabel for="vQuartos" value="Quartos" />
+					<h:outputText id="vQuartos" value="#{imovelBean.imovel.quartos}" />
+
+					<p:outputLabel for="vBanheiros" value="Banheiros" />
+					<h:outputText id="vBanheiros"
+						value="#{imovelBean.imovel.banheiros}" />
+
+					<p:outputLabel for="vSuites" value="Suites" />
+					<h:outputText id="vSuites"
+						value="#{imovelBean.imovel.suites == null ? '-' : imovelBean.imovel.suites}" />
+
+					<p:outputLabel for="vGaragem" value="Garagem" />
+					<h:outputText id="vGaragem"
+						value="#{imovelBean.imovel.garagem == null ? '-' : imovelBean.imovel.garagem}" />
+
+					<p:outputLabel for="vCidade" value="Cidade" />
+					<h:outputText id="vCidade"
+						value="#{imovelBean.imovel.bairro.cidade.nome}" />
+
+					<p:outputLabel for="vBairro" value="Bairro" />
+					<h:outputText id="vBairro" value="#{imovelBean.imovel.bairro.nome}" />
+
+					<p:outputLabel for="vAreaTotal" value="Área Total" />
+					<h:outputText id="vAreaTotal"
+						value="#{imovelBean.imovel.areaTotal}" />
+
+					<p:outputLabel for="vAreaConstruida" value="Área Construida" />
+					<h:outputText id="vAreaConstruida"
+						value="#{imovelBean.imovel.areaConstruida == null ? '-' : imovelBean.imovel.areaConstruida}" />
+
+					<p:outputLabel for="vFotos" value="Fotos" />
+					<p:lightBox id="vFotos" styleClass="imagebox" style="width: 300px;">
+						<ui:repeat var="foto" value="#{imovelBean.imovel.fotos}">
+							<h:outputLink value="#{foto.url}">
+								<h:graphicImage value="#{foto.url}"
+									style="float: left; height: 50px; margin: 2px;" />
+							</h:outputLink>
+						</ui:repeat>
+					</p:lightBox>
+
+					<p:outputLabel for="vComentarios" value="Comentários" />
+					<h:outputText id="vComentarios"
+						value="#{imovelBean.imovel.comentarios == null ? '-' : imovelBean.imovel.comentarios}" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="salvar" appendTo="@(body)" header="Novo Imóvel"
+			modal="true" resizable="false">
+			<h:form id="formModalSalvar" prependId="false">
+				<h:panelGrid id="modalSalvar" columns="2">
+					<p:outputLabel for="nTipoImovel" value="Tipo do Imóvel" />
+					<p:selectOneMenu id="nTipoImovel" value="#{imovelBean.imovel.tipo}"
+						filter="true" style="width: 200px !important;" required="true"
+						requiredMessage="Tipo do Imóvel deve ser informado">
+						<f:selectItem itemLabel="" />
+						<f:selectItems value="#{imovelBean.todosTiposImoveis()}"
+							var="tipoImovel" itemLabel="#{tipoImovel.descricao}"
+							itemValue="#{tipoImovel}" />
+					</p:selectOneMenu>
+					<div />
+					<p:message for="nTipoImovel" />
+
+					<p:outputLabel for="nCondominio" value="Condomínio" />
+					<p:selectOneRadio id="nCondominio"
+						value="#{imovelBean.imovel.condominio}" layout="lineDirection"
+						required="true" requiredMessage="Condomínio deve ser informado">
+						<f:selectItem itemLabel="Sim" itemValue="#{true}" />
+						<f:selectItem itemLabel="Não" itemValue="#{false}" />
+					</p:selectOneRadio>
+					<div />
+					<p:message for="nCondominio" />
+
+					<p:outputLabel for="nQuartos" value="Quartos" />
+					<p:inputText id="nQuartos" value="#{imovelBean.imovel.quartos}"
+						size="15" maxlength="10" required="true"
+						requiredMessage="Quartos deve ser informado"
+						converter="javax.faces.Integer" />
+					<div />
+					<p:message for="nQuartos" />
+
+					<p:outputLabel for="nBanheiros" value="Banheiros" />
+					<p:inputText id="nBanheiros" value="#{imovelBean.imovel.banheiros}"
+						size="15" maxlength="10" required="true"
+						requiredMessage="Banheiros deve ser informado"
+						converter="javax.faces.Integer" />
+					<div />
+					<p:message for="nBanheiros" />
+
+					<p:outputLabel for="nSuites" value="Suites" />
+					<p:inputText id="nSuites" value="#{imovelBean.imovel.suites}"
+						size="15" maxlength="10" converter="javax.faces.Integer" />
+					<div />
+					<p:message for="nSuites" />
+
+					<p:outputLabel for="nGaragem" value="Garagem" />
+					<p:inputText id="nGaragem" value="#{imovelBean.imovel.garagem}"
+						size="15" maxlength="10" converter="javax.faces.Integer" />
+					<div />
+					<p:message for="nGaragem" />
+
+					<p:outputLabel for="nCidade" value="Cidade" />
+					<p:selectOneMenu id="nCidade" value="#{imovelBean.cidade}"
+						filter="true" style="width: 200px !important;" required="true"
+						requiredMessage="Cidade deve ser informada">
+						<f:selectItem itemLabel="" />
+						<f:selectItems value="#{imovelBean.todasCidades()}" var="cidade"
+							itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+						<p:ajax process="@this" event="change"
+							listener="#{imovelBean.carregarBairros()}" update="nBairro" />
+					</p:selectOneMenu>
+					<div />
+					<p:message for="nCidade" />
+
+					<p:outputLabel for="nBairro" value="Bairro" />
+					<p:selectOneMenu id="nBairro" value="#{imovelBean.imovel.bairro}"
+						filter="true" style="width: 200px !important;" required="true"
+						requiredMessage="Bairro deve ser informada">
+						<f:selectItem itemLabel="" />
+						<f:selectItems value="#{imovelBean.listaBairros}" var="bairro"
+							itemLabel="#{bairro.nome}" itemValue="#{bairro}" />
+					</p:selectOneMenu>
+					<div />
+					<p:message for="nBairro" />
+
+					<p:outputLabel for="nAreaTotal" value="Área Total" />
+					<p:inputText id="nAreaTotal" value="#{imovelBean.imovel.areaTotal}"
+						size="15" maxlength="10" converter="javax.faces.Integer" />
+					<div />
+					<p:message for="nAreaTotal" />
+
+					<p:outputLabel for="nAreaConstruida" value="Área Construida" />
+					<p:inputText id="nAreaConstruida"
+						value="#{imovelBean.imovel.areaConstruida}" size="15"
+						maxlength="10" converter="javax.faces.Integer" />
+					<div />
+					<p:message for="nAreaConstruida" />
+
+					<p:outputLabel for="nFotos" value="Fotos" />
+					<h:panelGroup>
+						<p:commandButton id="nFotos" icon="ui-icon-plus" value="Anexar"
+							actionListener="#{imovelBean.limparAnexos()}" immediate="true"
+							onclick="PF('anexarFotos').show();"
+							update=":formModalAnexarFotos:modalAnexarFotos" />
+						<h:outputText id="quantidadeAnexos"
+							value="#{imovelBean.quantidadeAnexos()} fotos anexadas" />
+					</h:panelGroup>
+					<div />
+					<p:message for="nFotos" />
+
+					<p:outputLabel for="nComentarios" value="Comentários" />
+					<p:inputTextarea id="nComentarios"
+						value="#{imovelBean.imovel.comentarios}" cols="50" rows="7"
+						autoResize="false" />
+					<div />
+					<p:message for="nComentarios" />
+
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('salvar').hide();" />
+					<p:commandButton value="Salvar"
+						actionListener="#{imovelBean.salvar()}"
+						oncomplete="PF('dataTableImovel').clearFilters(); hideDialogOnSuccess(args, PF('salvar'));"
+						update=":formTabelaImovel:tabelaImovel :formModalSalvar :formModalAnexarFotos :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="anexarFotos" appendTo="@(body)"
+			header="Anexar Fotos" modal="true" resizable="false" width="720"
+			height="400">
+			<h:form id="formModalAnexarFotos" prependId="false">
+				<h:panelGrid id="modalAnexarFotos" columns="1">
+
+					<p:fileUpload id="aFotos"
+						fileUploadListener="#{imovelBean.uploadFotos}" mode="advanced"
+						multiple="true" sizeLimit="10000000" fileLimit="5"
+						label="Selecionar..." uploadLabel="Anexar" cancelLabel="Cancelar"
+						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" style="width: 700px;"
+						oncomplete="PF('anexarFotos').hide();" update=":quantidadeAnexos"
+						fileLimitMessage="Número de fotos não pode ser superior a 5"
+						invalidSizeMessage="Imagem deve ter tamanho máximo de 10mb"
+						invalidFileMessage="O formato das fotos devem ser .jpg / .jpeg / .png / .gif" />
+					<p:message for="aFotos" />
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="excluir" appendTo="@(body)"
+			header="Excluir Imóvel" modal="true" resizable="false">
+			<h:form id="formModalExcluir">
+				<h:panelGrid id="modalExcluir" columns="2">
+					<p:outputLabel for="eTipoImovel" value="Tipo do Imóvel" />
+					<h:outputText id="eTipoImovel" value="#{imovelBean.imovel.tipo}" />
+
+					<p:outputLabel for="eCondominio" value="Condomínio" />
+					<h:outputText id="eCondominio"
+						value="#{imovelBean.imovel.condominio == true ? 'Sim' : 'Não'}" />
+
+					<p:outputLabel for="eQuartos" value="Quartos" />
+					<h:outputText id="eQuartos" value="#{imovelBean.imovel.quartos}" />
+
+					<p:outputLabel for="eBanheiros" value="Banheiros" />
+					<h:outputText id="eBanheiros"
+						value="#{imovelBean.imovel.banheiros}" />
+
+					<p:outputLabel for="eSuites" value="Suites" />
+					<h:outputText id="eSuites"
+						value="#{imovelBean.imovel.suites == null ? '-' : imovelBean.imovel.suites}" />
+
+					<p:outputLabel for="eGaragem" value="Garagem" />
+					<h:outputText id="eGaragem"
+						value="#{imovelBean.imovel.garagem == null ? '-' : imovelBean.imovel.garagem}" />
+
+					<p:outputLabel for="eCidade" value="Cidade" />
+					<h:outputText id="eCidade"
+						value="#{imovelBean.imovel.bairro.cidade.nome}" />
+
+					<p:outputLabel for="eBairro" value="Bairro" />
+					<h:outputText id="eBairro" value="#{imovelBean.imovel.bairro.nome}" />
+
+					<p:outputLabel for="eAreaTotal" value="Área Total" />
+					<h:outputText id="eAreaTotal"
+						value="#{imovelBean.imovel.areaTotal}" />
+
+					<p:outputLabel for="eAreaConstruida" value="Área Construida" />
+					<h:outputText id="eAreaConstruida"
+						value="#{imovelBean.imovel.areaConstruida == null ? '-' : imovelBean.imovel.areaConstruida}" />
+
+					<p:outputLabel for="eFotos" value="Fotos" />
+					<p:lightBox id="eFotos" styleClass="imagebox" style="width: 300px;">
+						<ui:repeat var="foto" value="#{imovelBean.imovel.fotos}">
+							<h:outputLink value="#{request.contextPath}#{foto.url}">
+								<h:graphicImage value="#{foto.url}"
+									style="float: left; height: 50px; margin: 2px;" />
+							</h:outputLink>
+						</ui:repeat>
+					</p:lightBox>
+
+					<p:outputLabel for="eComentarios" value="Comentários" />
+					<h:outputText id="eComentarios"
+						value="#{imovelBean.imovel.comentarios == null ? '-' : imovelBean.imovel.comentarios}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('excluir').hide();" />
+
+					<p:commandButton value="Excluir"
+						actionListener="#{imovelBean.excluir()}"
+						oncomplete="PF('dataTableImovel').clearFilters(); hideDialogOnSuccess(args, PF('excluir'));"
+						update=":formTabelaImovel:tabelaImovel :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

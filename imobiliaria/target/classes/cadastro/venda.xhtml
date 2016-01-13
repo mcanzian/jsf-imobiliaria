@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/WEB-INF/templates/master.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="menu">
+		<ui:include src="/inserts/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<div style="width: 50%; margin: 0 auto;">
+			<h:form id="formTabelaVenda">
+				<p:dataTable id="tabelaVenda" value="#{vendaBean.lista}"
+					filteredValue="#{vendaBean.listaFiltrada}" var="item"
+					widgetVar="dataTableVenda" paginator="true" rows="10"
+					emptyMessage="Nenhum registro encontrado.">
+
+					<f:facet name="header">
+						Tabela de Vendas de Imóveis
+					</f:facet>
+
+					<p:column headerText="Código" width="60"
+						style="text-align: center;" sortBy="#{item.id}"
+						filterBy="#{item.id}" filterStyle="width: 50px;">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Imóvel" width="140"
+						style="text-align: center;" sortBy="#{item.imovel.id}"
+						filterBy="#{item.imovel.id}" filterStyle="width: 130px;">
+						<h:outputText value="#{item.imovel.id}" />
+					</p:column>
+
+					<p:column headerText="Valor" width="140"
+						style="text-align: center;" sortBy="#{item.valor}"
+						filterBy="#{item.valor}" filterStyle="width: 130px;">
+						<h:outputText value="#{item.valor}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Opções" width="155">
+						<p:commandButton value="Editar" icon="ui-icon-pencil"
+							oncomplete="PF('editar').show();"
+							update=":formModalEditar:modalEditar">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{vendaBean.venda}" />
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+						<p:commandButton value="Excluir" icon="ui-icon-trash"
+							oncomplete="PF('excluir').show();"
+							update=":formModalExcluir:modalExcluir">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{vendaBean.venda}" />
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="Novo" icon="ui-icon-plus"
+							actionListener="#{vendaBean.novo()}"
+							oncomplete="PF('salvar').show();"
+							update=":formModalSalvar:modalSalvar">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+						<p:commandButton value="Pesquisar" icon="ui-icon-search"
+							styleClass="filter" />
+					</f:facet>
+				</p:dataTable>
+			</h:form>
+		</div>
+
+		<p:dialog widgetVar="salvar" appendTo="@(body)" header="Nova Venda"
+			modal="true" resizable="false">
+			<h:form id="formModalSalvar" prependId="false">
+				<h:panelGrid id="modalSalvar" columns="2">
+
+					<p:outputLabel for="nImovel" value="Imóvel" />
+					<h:panelGroup>
+						<p:inputText id="nImovel" value="#{vendaBean.venda.imovel.id}"
+							required="true" requiredMessage="Imóvel deve ser informado"
+							size="10" readonly="#{facesContext.currentPhaseId.ordinal eq 6}" />
+						<p:commandButton icon="ui-icon-search"
+							onclick="PF('selecionar').show();" />
+					</h:panelGroup>
+					<div />
+					<p:message for="nImovel" />
+
+
+					<p:outputLabel for="nValor" value="Valor" />
+					<p:inputText id="nValor" value="#{vendaBean.venda.valor}" size="20"
+						required="true" requiredMessage="Valor deve ser informado">
+						<f:convertNumber pattern="0.00" converterId="javax.faces.Double" />
+					</p:inputText>
+					<div />
+					<p:message for="nValor" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('salvar').hide();" />
+
+					<p:commandButton value="Salvar"
+						actionListener="#{vendaBean.salvar()}"
+						oncomplete="PF('dataTableVenda').clearFilters(); hideDialogOnSuccess(args, PF('salvar'));"
+						update=":formTabelaVenda:tabelaVenda :formModalSalvar :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="editar" appendTo="@(body)" header="Editar Venda"
+			modal="true" resizable="false">
+			<h:form id="formModalEditar" prependId="false">
+				<h:panelGrid id="modalEditar" columns="2">
+
+					<p:outputLabel for="eImovel" value="Imóvel" />
+					<h:panelGroup>
+						<p:inputText id="eImovel" value="#{vendaBean.venda.imovel.id}"
+							required="true" requiredMessage="Imóvel deve ser informado"
+							size="10" readonly="#{facesContext.currentPhaseId.ordinal eq 6}" />
+						<p:commandButton icon="ui-icon-search"
+							onclick="PF('selecionar').show();" />
+					</h:panelGroup>
+					<div />
+					<p:message for="eImovel" />
+
+
+					<p:outputLabel for="eValor" value="Valor" />
+					<p:inputText id="eValor" value="#{vendaBean.venda.valor}" size="20"
+						required="true" requiredMessage="Valor deve ser informado">
+						<f:convertNumber pattern="0.00" converterId="javax.faces.Double" />
+					</p:inputText>
+					<div />
+					<p:message for="eValor" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('editar').hide();" />
+
+					<p:commandButton value="Editar"
+						actionListener="#{vendaBean.editar()}"
+						oncomplete="PF('dataTableVenda').clearFilters(); hideDialogOnSuccess(args, PF('editar'));"
+						update=":formTabelaVenda:tabelaVenda :formModalEditar :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="selecionar" appendTo="@(body)"
+			header="Selecionar Imóvel" modal="true" resizable="false">
+
+			<h:form id="formModalSelecionar" prependId="false">
+				<h:panelGrid id="modalSelecionar" columns="1">
+
+					<p:dataTable id="tabelaImovel" value="#{vendaBean.todosImoveis()}"
+						var="item" widgetVar="dataTableImovel" paginator="true" rows="10"
+						emptyMessage="Nenhum registro encontrado.">
+
+						<p:column headerText="Código" width="60"
+							style="text-align: center;" sortBy="#{item.id}">
+							<h:outputText value="#{item.id}" />
+						</p:column>
+
+						<p:column headerText="Tipo de Imóvel" width="100"
+							sortBy="#{item.tipo}">
+							<h:outputText value="#{item.tipo}" />
+						</p:column>
+
+						<p:column headerText="Quartos" width="60"
+							style="text-align: center;" sortBy="#{item.quartos}">
+							<h:outputText value="#{item.quartos}" />
+						</p:column>
+
+						<p:column headerText="Banheiros" width="60"
+							style="text-align: center;" sortBy="#{item.banheiros}">
+							<h:outputText value="#{item.banheiros}" />
+						</p:column>
+
+						<p:column headerText="Bairro" width="120"
+							sortBy="#{item.bairro.nome}">
+							<h:outputText value="#{item.bairro.nome}" />
+						</p:column>
+
+						<p:column headerText="Cidade" width="120"
+							sortBy="#{item.bairro.cidade.nome}">
+							<h:outputText value="#{item.bairro.cidade.nome}" />
+						</p:column>
+
+						<p:column headerText="UF" width="60" style="text-align: center;"
+							sortBy="#{item.bairro.cidade.uf.sigla}">
+							<h:outputText value="#{item.bairro.cidade.uf.sigla}" />
+						</p:column>
+
+						<p:column width="30">
+							<p:commandButton icon="ui-icon-check"
+								oncomplete="PF('selecionar').hide();" update=":nImovel :eImovel">
+								<f:setPropertyActionListener value="#{item}"
+									target="#{vendaBean.venda.imovel}" />
+								<p:resetInput target="nImovel" />
+								<p:resetInput target="eImovel" />
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="excluir" appendTo="@(body)"
+			header="Excluir Venda" modal="true" resizable="false">
+			<h:form id="formModalExcluir" prependId="false">
+				<h:panelGrid id="modalExcluir" columns="2">
+
+					<p:outputLabel value="Imóvel" />
+					<p:inputText value="#{vendaBean.venda.imovel.id}" size="10"
+						readonly="true" />
+
+					<p:outputLabel value="Valor" />
+					<p:inputText value="#{vendaBean.venda.valor}" size="20" readonly="true" />
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Cancelar" onclick="PF('excluir').hide();" />
+
+					<p:commandButton value="Excluir"
+						actionListener="#{vendaBean.excluir()}"
+						oncomplete="PF('dataTableVenda').clearFilters(); PF('excluir').hide();"
+						update=":formTabelaVenda:tabelaVenda :formModalExcluir :growl" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

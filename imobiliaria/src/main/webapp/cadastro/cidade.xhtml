@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/WEB-INF/templates/master.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="menu">
+		<ui:include src="/inserts/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<div style="width: 90%; margin: 0 auto;">
+			<h:form id="formTabelaCidade">
+				<p:dataTable id="tabelaCidade" value="#{cidadeBean.lista}"
+					filteredValue="#{cidadeBean.listaFiltrada}" var="item"
+					widgetVar="dataTableCidade" paginator="true" rows="10"
+					emptyMessage="Nenhum registro encontrado.">
+
+					<f:facet name="header">
+						Tabela de Cidades
+					</f:facet>
+
+					<p:column headerText="Código" width="60"
+						style="text-align: center;" sortBy="#{item.id}"
+						filterBy="#{item.id}" filterStyle="width: 50px;">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Nome" sortBy="#{item.nome}"
+						filterBy="#{item.nome}" filterStyle="width: 400px;">
+						<h:outputText value="#{item.nome}" />
+					</p:column>
+
+					<p:column headerText="UF" width="60" style="text-align: center;"
+						sortBy="#{item.uf.sigla}" filterBy="#{item.uf.sigla}"
+						filterStyle="width: 50px;">
+						<h:outputText value="#{item.uf.sigla}" />
+					</p:column>
+
+					<p:column headerText="Opções" width="155">
+						<p:commandButton value="Editar" icon="ui-icon-pencil"
+							oncomplete="PF('editar').show();"
+							update=":formModalEditar:modalEditar">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{cidadeBean.cidade}" />
+						</p:commandButton>
+
+						<p:commandButton value="Excluir" icon="ui-icon-trash"
+							oncomplete="PF('excluir').show();"
+							update=":formModalExcluir:modalExcluir">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{cidadeBean.cidade}" />
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="Novo" icon="ui-icon-plus"
+							actionListener="#{cidadeBean.novo()}"
+							oncomplete="PF('salvar').show();"
+							update=":formModalSalvar:modalSalvar">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+						<p:commandButton value="Pesquisar" icon="ui-icon-search"
+							styleClass="filter" />
+					</f:facet>
+
+				</p:dataTable>
+			</h:form>
+
+			<p:dialog widgetVar="salvar" appendTo="@(body)" header="Nova Cidade"
+				modal="true" resizable="false">
+				<h:form id="formModalSalvar" prependId="false">
+					<h:panelGrid id="modalSalvar" columns="2">
+						<p:outputLabel for="nNome" value="Nome" />
+						<p:inputText id="nNome" value="#{cidadeBean.cidade.nome}"
+							size="50" maxlength="50" required="true"
+							requiredMessage="Nome deve ser informado" />
+						<div />
+						<p:message for="nNome" />
+
+						<p:outputLabel for="nUF" value="UF" />
+						<p:selectOneMenu id="nUF" value="#{cidadeBean.cidade.uf}"
+							required="true" requiredMessage="UF deve ser informado">
+							<f:selectItem itemLabel="" />
+							<f:selectItems value="#{cidadeBean.todosUfs()}" var="uf"
+								itemLabel="#{uf.sigla}" itemValue="#{uf}" />
+						</p:selectOneMenu>
+						<div />
+						<p:message for="nUF" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Cancelar" onclick="PF('salvar').hide();" />
+
+						<p:commandButton value="Salvar"
+							actionListener="#{cidadeBean.salvar()}"
+							oncomplete="PF('dataTableCidade').clearFilters(); hideDialogOnSuccess(args, PF('salvar'));"
+							update=":formTabelaCidade:tabelaCidade :formModalSalvar :growl" />
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog widgetVar="editar" appendTo="@(body)"
+				header="Editar Cidade" modal="true" resizable="false">
+				<h:form id="formModalEditar" prependId="false">
+					<h:panelGrid id="modalEditar" columns="2">
+						<p:outputLabel for="eNome" value="Nome" />
+						<p:inputText id="eNome" value="#{cidadeBean.cidade.nome}"
+							size="50" maxlength="50" required="true"
+							requiredMessage="Nome deve ser informado" />
+						<div />
+						<p:message for="eNome" />
+
+						<p:outputLabel for="eUF" value="UF" />
+						<p:selectOneMenu id="eUF" value="#{cidadeBean.cidade.uf}"
+							required="true" requiredMessage="UF deve ser informado">
+							<f:selectItem itemLabel="" />
+							<f:selectItems value="#{cidadeBean.todosUfs()}" var="uf"
+								itemLabel="#{uf.sigla}" itemValue="#{uf}" />
+						</p:selectOneMenu>
+						<div />
+						<p:message for="eUF" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Cancelar" onclick="PF('editar').hide();" />
+
+						<p:commandButton value="Editar"
+							actionListener="#{cidadeBean.editar()}"
+							oncomplete="PF('dataTableCidade').clearFilters(); hideDialogOnSuccess(args, PF('editar'));"
+							update=":formTabelaCidade:tabelaCidade :formModalEditar :growl" />
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog widgetVar="excluir" appendTo="@(body)"
+				header="Excluir Cidade" modal="true" resizable="false">
+				<h:form id="formModalExcluir" prependId="false">
+					<h:panelGrid id="modalExcluir" columns="2">
+						<h:outputText value="Nome" />
+						<h:outputText value="#{cidadeBean.cidade.nome}" />
+
+						<h:outputText value="UF" />
+						<h:outputText value="#{cidadeBean.cidade.uf.sigla}" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Cancelar" onclick="PF('excluir').hide();" />
+
+						<p:commandButton value="Excluir"
+							actionListener="#{cidadeBean.excluir()}"
+							oncomplete="PF('dataTableCidade').clearFilters(); hideDialogOnSuccess(args, PF('excluir'));"
+							update=":formTabelaCidade:tabelaCidade :formModalExcluir :growl" />
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
+		</div>
+	</ui:define>
+</ui:composition>
