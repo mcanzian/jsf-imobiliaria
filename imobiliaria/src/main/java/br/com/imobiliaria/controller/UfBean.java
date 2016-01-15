@@ -60,7 +60,7 @@ public class UfBean implements Serializable {
 		try {
 			lista = ufs.todos();
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao listar os UFs.");
 		}
 	}
 
@@ -76,8 +76,8 @@ public class UfBean implements Serializable {
 
 			JsfUtil.adicionarGrowlInfo("UF adicionado com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarMensagemErro(e.getMessage());
-			System.out.println(e.getMessage());
+			JsfUtil.adicionarMensagemErro("Ocorreu um erro ao salvar o UF.");
+			e.printStackTrace();
 		}
 	}
 
@@ -89,7 +89,8 @@ public class UfBean implements Serializable {
 
 			JsfUtil.adicionarGrowlInfo("UF editado com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarMensagemErro(e.getMessage());
+			JsfUtil.adicionarMensagemErro("Ocorreu um erro ao editar o UF.");
+			e.printStackTrace();
 		}
 	}
 
@@ -101,7 +102,8 @@ public class UfBean implements Serializable {
 
 			JsfUtil.adicionarGrowlInfo("UF excluido com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarMensagemErro(e.getMessage());
+			JsfUtil.adicionarMensagemErro("Ocorreu um erro ao excluir o UF.");
+			e.printStackTrace();
 		}
 	}
 

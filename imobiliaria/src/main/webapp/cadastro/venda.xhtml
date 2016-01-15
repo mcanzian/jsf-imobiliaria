@@ -74,6 +74,9 @@
 
 						<p:commandButton value="Pesquisar" icon="ui-icon-search"
 							styleClass="filter" />
+
+						<p:commandButton value="Relatório" icon="ui-icon-note"
+							actionListener="#{vendaBean.gerarRelatorio()}" update=":growl" />
 					</f:facet>
 				</p:dataTable>
 			</h:form>
@@ -223,7 +226,8 @@
 						readonly="true" />
 
 					<p:outputLabel value="Valor" />
-					<p:inputText value="#{vendaBean.venda.valor}" size="20" readonly="true" />
+					<p:inputText value="#{vendaBean.venda.valor}" size="20"
+						readonly="true" />
 
 				</h:panelGrid>
 

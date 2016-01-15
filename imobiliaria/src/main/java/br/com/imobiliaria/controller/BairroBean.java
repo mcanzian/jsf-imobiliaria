@@ -64,7 +64,8 @@ public class BairroBean implements Serializable {
 		try {
 			lista = bairros.todos();
 		} catch (Exception e) {
-			JsfUtil.adicionarMensagemErro(e.getMessage());
+			JsfUtil.adicionarMensagemErro("Ocorreu um erro ao listar os bairros.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -80,7 +81,8 @@ public class BairroBean implements Serializable {
 			
 			JsfUtil.adicionarGrowlAviso("Bairro adicionado com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao salvar o bairro.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -92,7 +94,8 @@ public class BairroBean implements Serializable {
 			
 			JsfUtil.adicionarGrowlInfo("Bairro editado com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao editar o bairro.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -104,7 +107,8 @@ public class BairroBean implements Serializable {
 			
 			JsfUtil.adicionarGrowlInfo("Bairro excluido com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao excluir o bairro.");
+			e.printStackTrace();
 		}
 	}
 	

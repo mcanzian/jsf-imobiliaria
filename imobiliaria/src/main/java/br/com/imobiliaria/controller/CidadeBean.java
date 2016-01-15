@@ -64,7 +64,8 @@ public class CidadeBean implements Serializable {
 		try {
 			lista = cidades.todos();
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao listar as cidades.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -80,7 +81,8 @@ public class CidadeBean implements Serializable {
 			
 			JsfUtil.adicionarGrowlInfo("Cidade adicionada com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao salvar a cidade.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -92,7 +94,8 @@ public class CidadeBean implements Serializable {
 			
 			JsfUtil.adicionarGrowlInfo("Cidade editada com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao editar a cidade.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -104,7 +107,8 @@ public class CidadeBean implements Serializable {
 			
 			JsfUtil.adicionarGrowlInfo("Cidade excluida com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao excluir a cidade.");
+			e.printStackTrace();
 		}
 	}
 	

@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
@@ -103,7 +101,8 @@ public class ImovelBean implements Serializable {
 		try {
 			lista = imoveis.todos();
 		} catch (Exception e) {
-			JsfUtil.adicionarMensagemErro(e.getMessage());
+			JsfUtil.adicionarMensagemErro("Ocorreu um erro ao listar os imóveis.");
+			e.printStackTrace();
 		}
 	}
 
@@ -123,7 +122,8 @@ public class ImovelBean implements Serializable {
 
 			JsfUtil.adicionarGrowlInfo("Imovel adicionado com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao salvar o imóvel.");
+			e.printStackTrace();
 		}
 	}
 
@@ -135,7 +135,8 @@ public class ImovelBean implements Serializable {
 
 			JsfUtil.adicionarGrowlInfo("Imovel excluido com sucesso.");
 		} catch (Exception e) {
-			JsfUtil.adicionarGrowlErro(e.getMessage());
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro ao excluir o imóvel.");
+			e.printStackTrace();
 		}
 	}
 
@@ -176,8 +177,9 @@ public class ImovelBean implements Serializable {
 			foto.setArquivo(temp.toFile());
 			
 			uploadedFotos.add(foto);
-		} catch (IOException ex) {
-			Logger.getLogger(ImovelBean.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException e) {
+			JsfUtil.adicionarGrowlErro("Ocorreu um erro durante o upload das fotos.");
+			e.printStackTrace();
 		}
 	}
 
