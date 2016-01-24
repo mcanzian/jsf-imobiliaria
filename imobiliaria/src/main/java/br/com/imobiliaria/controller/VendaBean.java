@@ -11,6 +11,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.omnifaces.util.Faces;
 import org.primefaces.component.datatable.DataTable;
 
@@ -122,6 +123,18 @@ public class VendaBean implements Serializable {
 
 	public List<Imovel> todosImoveis() {
 		return imoveis.todos();
+	}
+	
+	@NotBlank
+	public String getIdImovel() {
+		if (venda.getImovel() == null)
+			return null;
+		
+		return venda.getImovel().getId().toString();
+	}
+	
+	public void setIdImovel(String idImovel) {
+		//venda.getImovel().setId(new Long(idImovel));
 	}
 
 	public void gerarRelatorio() {

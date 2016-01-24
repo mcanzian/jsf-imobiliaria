@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Ver imóvel</title>
+
+	<h:outputScript library="primefaces" name="jquery/jquery.js" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js" />
+	<h:outputScript name="js/scripts.js" />
+	
+	<h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+
+	<h:form id="formModalVer">
+		<h:panelGrid id="modalVer" columns="2">
+			<p:outputLabel for="vTipoImovel" value="Tipo do Imóvel" />
+			<h:outputText id="vTipoImovel" value="#{imovelBean.imovel.tipo}" />
+
+			<p:outputLabel for="vCondominio" value="Condomínio" />
+			<h:outputText id="vCondominio"
+				value="#{imovelBean.imovel.condominio == true ? 'Sim' : 'Não'}" />
+
+			<p:outputLabel for="vQuartos" value="Quartos" />
+			<h:outputText id="vQuartos" value="#{imovelBean.imovel.quartos}" />
+
+			<p:outputLabel for="vBanheiros" value="Banheiros" />
+			<h:outputText id="vBanheiros"
+				value="#{imovelBean.imovel.banheiros}" />
+
+			<p:outputLabel for="vSuites" value="Suites" />
+			<h:outputText id="vSuites"
+				value="#{imovelBean.imovel.suites == null ? '-' : imovelBean.imovel.suites}" />
+
+			<p:outputLabel for="vGaragem" value="Garagem" />
+			<h:outputText id="vGaragem"
+				value="#{imovelBean.imovel.garagem == null ? '-' : imovelBean.imovel.garagem}" />
+
+			<p:outputLabel for="vCidade" value="Cidade" />
+			<h:outputText id="vCidade"
+				value="#{imovelBean.imovel.bairro.cidade.nome}" />
+
+			<p:outputLabel for="vBairro" value="Bairro" />
+			<h:outputText id="vBairro" value="#{imovelBean.imovel.bairro.nome}" />
+
+			<p:outputLabel for="vAreaTotal" value="Área Total" />
+			<h:outputText id="vAreaTotal"
+				value="#{imovelBean.imovel.areaTotal}" />
+
+			<p:outputLabel for="vAreaConstruida" value="Área Construida" />
+			<h:outputText id="vAreaConstruida"
+				value="#{imovelBean.imovel.areaConstruida == null ? '-' : imovelBean.imovel.areaConstruida}" />
+
+			<p:outputLabel for="vFotos" value="Fotos" />
+			<p:lightBox id="vFotos" styleClass="imagebox" style="width: 300px;">
+				<ui:repeat var="foto" value="#{imovelBean.imovel.fotos}">
+					<h:outputLink value="#{foto.url}">
+						<h:graphicImage value="#{foto.url}"
+							style="float: left; height: 50px; margin: 2px;" />
+					</h:outputLink>
+				</ui:repeat>
+			</p:lightBox>
+
+			<p:outputLabel for="vComentarios" value="Comentários" />
+			<h:outputText id="vComentarios"
+				value="#{imovelBean.imovel.comentarios == null ? '-' : imovelBean.imovel.comentarios}" />
+		</h:panelGrid>
+	</h:form>
+
+</h:body>
+</html>
+

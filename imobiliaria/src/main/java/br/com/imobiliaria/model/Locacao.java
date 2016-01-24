@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+
+import org.springframework.format.annotation.NumberFormat;
 
 @Entity
 @Table(name="locacao")
@@ -18,15 +22,33 @@ public class Locacao implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="imovel_id", referencedColumnName="id", nullable=false)
 	private Imovel imovel;
+	
+	@DecimalMin(value="0.01")
+	@DecimalMax(value="999999999.99")
+	@NumberFormat(pattern = "#,##0.00")
+	@Column(nullable=false)
 	private Double valor;
+	
+	@DecimalMin(value="0.01")
+	@DecimalMax(value="99999.99")
+	@NumberFormat(pattern = "#,##0.00")
+	@Column(nullable=true)
 	private Double condominio;
+	
+	@DecimalMin(value="0.01")
+	@DecimalMax(value="99999.99")
+	@NumberFormat(pattern = "#,##0.00")
+	@Column(nullable=true)
 	private Double taxas;
 
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
@@ -35,8 +57,6 @@ public class Locacao implements Serializable {
 		this.id = id;
 	}
 
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="imovel_id", referencedColumnName="id", nullable=false)
 	public Imovel getImovel() {
 		return imovel;
 	}
@@ -45,7 +65,6 @@ public class Locacao implements Serializable {
 		this.imovel = imovel;
 	}
 
-	@Column(precision=12, scale=2, nullable=false)
 	public Double getValor() {
 		return valor;
 	}
@@ -54,7 +73,6 @@ public class Locacao implements Serializable {
 		this.valor = valor;
 	}
 
-	@Column(precision=7, scale=2, nullable=true)
 	public Double getCondominio() {
 		return condominio;
 	}
@@ -63,7 +81,6 @@ public class Locacao implements Serializable {
 		this.condominio = condominio;
 	}
 
-	@Column(precision=7, scale=2, nullable=true)
 	public Double getTaxas() {
 		return taxas;
 	}

@@ -186,5 +186,14 @@ public class ImovelBean implements Serializable {
 	public int quantidadeAnexos() {
 		return uploadedFotos.size();
 	}
-
+	
 }
+
+
+
+
+
+
+
+
+

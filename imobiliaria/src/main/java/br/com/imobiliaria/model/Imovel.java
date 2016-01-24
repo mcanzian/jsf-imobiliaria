@@ -62,7 +62,7 @@ public class Imovel implements Serializable {
 	@Column(name = "area_construida", nullable = true)
 	private Integer areaConstruida;
 	
-	@OneToMany(mappedBy = "imovel", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "imovel", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Foto> fotos;
 	
 	@Column(columnDefinition = "text", nullable = true)

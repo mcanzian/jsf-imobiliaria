@@ -25,14 +25,24 @@ public class Cidade implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	@NotBlank
+	@Size(min=3, max=50)
+	@Column(length=50, nullable=false)
 	private String nome;
+	
+	@NotNull
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="uf_id", nullable=false)
 	private Uf uf;
+	
+	@OneToMany(mappedBy="cidade", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Bairro> bairros;
 
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
@@ -41,9 +51,6 @@ public class Cidade implements Serializable {
 		this.id = id;
 	}
 
-	@NotBlank
-	@Size(min=3, max=50)
-	@Column(length=50, nullable=false)
 	public String getNome() {
 		return nome;
 	}
@@ -52,9 +59,6 @@ public class Cidade implements Serializable {
 		this.nome = nome;
 	}
 
-	@NotNull
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="uf_id", nullable=false)
 	public Uf getUf() {
 		return uf;
 	}
@@ -63,7 +67,6 @@ public class Cidade implements Serializable {
 		this.uf = uf;
 	}
 	
-	@OneToMany(mappedBy="cidade", cascade=CascadeType.ALL, orphanRemoval=true)
 	public List<Bairro> getBairros() {
 		return bairros;
 	}

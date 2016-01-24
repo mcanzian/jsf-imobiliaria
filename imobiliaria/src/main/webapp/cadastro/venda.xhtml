@@ -9,9 +9,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="menu">
-		<ui:include src="/inserts/menu.xhtml" />
-	</ui:define>
+	<ui:define name="titulo">Imobiliária - Vendas</ui:define>
 
 	<ui:define name="conteudo">
 		<div style="width: 50%; margin: 0 auto;">
@@ -89,7 +87,7 @@
 
 					<p:outputLabel for="nImovel" value="Imóvel" />
 					<h:panelGroup>
-						<p:inputText id="nImovel" value="#{vendaBean.venda.imovel.id}"
+						<p:inputText id="nImovel" value="#{vendaBean.idImovel}"
 							required="true" requiredMessage="Imóvel deve ser informado"
 							size="10" readonly="#{facesContext.currentPhaseId.ordinal eq 6}" />
 						<p:commandButton icon="ui-icon-search"
@@ -126,7 +124,7 @@
 
 					<p:outputLabel for="eImovel" value="Imóvel" />
 					<h:panelGroup>
-						<p:inputText id="eImovel" value="#{vendaBean.venda.imovel.id}"
+						<p:inputText id="eImovel" value="#{vendaBean.idImovel}"
 							required="true" requiredMessage="Imóvel deve ser informado"
 							size="10" readonly="#{facesContext.currentPhaseId.ordinal eq 6}" />
 						<p:commandButton icon="ui-icon-search"

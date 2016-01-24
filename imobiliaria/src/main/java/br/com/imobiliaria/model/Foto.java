@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -27,13 +26,21 @@ public class Foto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
-	private String nome;
-	private Imovel imovel;
-	private File arquivo;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	
+	@Size(min = 1, max = 100)
+	@Column(length = 100, nullable = false)
+	private String nome;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "imovel_id", nullable = false)
+	private Imovel imovel;
+	
+	private File arquivo;
+
 	public Long getId() {
 		return id;
 	}
@@ -42,8 +49,6 @@ public class Foto implements Serializable {
 		this.id = id;
 	}
 
-	@Size(min = 1, max = 100)
-	@Column(length = 100, nullable = false)
 	public String getNome() {
 		return nome;
 	}
@@ -52,9 +57,6 @@ public class Foto implements Serializable {
 		this.nome = nome;
 	}
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "imovel_id", nullable = false)
 	public Imovel getImovel() {
 		return imovel;
 	}
@@ -63,7 +65,6 @@ public class Foto implements Serializable {
 		this.imovel = imovel;
 	}
 
-	@Transient
 	public File getArquivo() {
 		if (arquivo == null)
 			return new File(diretorioDeGravacao() + nome);
@@ -75,7 +76,6 @@ public class Foto implements Serializable {
 		this.arquivo = arquivo;
 	}
 
-	@Transient
 	public String getUrl() throws IOException {
 		return JsfUtil.urlUpload() + imovel.getId() + "/" + nome;
 	}

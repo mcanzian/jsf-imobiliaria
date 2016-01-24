@@ -22,13 +22,21 @@ public class Bairro implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	@NotBlank
+	@Size(min=3, max=50)
+	@Column(length=50, nullable=false)
 	private String nome;
+	
+	@NotNull
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="cidade_id", nullable=false)
 	private Cidade cidade;
 
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
@@ -37,9 +45,6 @@ public class Bairro implements Serializable {
 		this.id = id;
 	}
 
-	@NotBlank
-	@Size(min=3, max=50)
-	@Column(length=50, nullable=false)
 	public String getNome() {
 		return nome;
 	}
@@ -48,9 +53,6 @@ public class Bairro implements Serializable {
 		this.nome = nome;
 	}
 
-	@NotNull
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="cidade_id", nullable=false)
 	public Cidade getCidade() {
 		return cidade;
 	}

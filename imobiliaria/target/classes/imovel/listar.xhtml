@@ -9,7 +9,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="titulo">Imobiliária - Imóveis</ui:define>
+	<ui:define name="menu">
+		<ui:include src="/inserts/menu.xhtml" />
+	</ui:define>
 
 	<ui:define name="conteudo">
 		<div style="width: 90%; margin: 0 auto;">
@@ -68,10 +70,7 @@
 
 					<p:column headerText="Opções" width="90">
 						<p:commandButton value="Ver" icon="ui-icon-document"
-							oncomplete="PF('ver').show();" update=":formModalVer:modalVer">
-							<f:setPropertyActionListener value="#{item}"
-								target="#{imovelBean.imovel}" />
-						</p:commandButton>
+							action="#{imovelBean.abrirModalVer(item)}" process="@this" update="@none" />
 
 						<p:commandButton value="Excluir" icon="ui-icon-trash"
 							oncomplete="PF('excluir').show();"
@@ -97,64 +96,6 @@
 				</p:dataTable>
 			</h:form>
 		</div>
-
-		<p:dialog widgetVar="ver" appendTo="@(body)" header="Ver Imóvel"
-			modal="true" resizable="false">
-			<h:form id="formModalVer">
-				<h:panelGrid id="modalVer" columns="2">
-					<p:outputLabel for="vTipoImovel" value="Tipo do Imóvel" />
-					<h:outputText id="vTipoImovel" value="#{imovelBean.imovel.tipo}" />
-
-					<p:outputLabel for="vCondominio" value="Condomínio" />
-					<h:outputText id="vCondominio"
-						value="#{imovelBean.imovel.condominio == true ? 'Sim' : 'Não'}" />
-
-					<p:outputLabel for="vQuartos" value="Quartos" />
-					<h:outputText id="vQuartos" value="#{imovelBean.imovel.quartos}" />
-
-					<p:outputLabel for="vBanheiros" value="Banheiros" />
-					<h:outputText id="vBanheiros"
-						value="#{imovelBean.imovel.banheiros}" />
-
-					<p:outputLabel for="vSuites" value="Suites" />
-					<h:outputText id="vSuites"
-						value="#{imovelBean.imovel.suites == null ? '-' : imovelBean.imovel.suites}" />
-
-					<p:outputLabel for="vGaragem" value="Garagem" />
-					<h:outputText id="vGaragem"
-						value="#{imovelBean.imovel.garagem == null ? '-' : imovelBean.imovel.garagem}" />
-
-					<p:outputLabel for="vCidade" value="Cidade" />
-					<h:outputText id="vCidade"
-						value="#{imovelBean.imovel.bairro.cidade.nome}" />
-
-					<p:outputLabel for="vBairro" value="Bairro" />
-					<h:outputText id="vBairro" value="#{imovelBean.imovel.bairro.nome}" />
-
-					<p:outputLabel for="vAreaTotal" value="Área Total" />
-					<h:outputText id="vAreaTotal"
-						value="#{imovelBean.imovel.areaTotal}" />
-
-					<p:outputLabel for="vAreaConstruida" value="Área Construida" />
-					<h:outputText id="vAreaConstruida"
-						value="#{imovelBean.imovel.areaConstruida == null ? '-' : imovelBean.imovel.areaConstruida}" />
-
-					<p:outputLabel for="vFotos" value="Fotos" />
-					<p:lightBox id="vFotos" styleClass="imagebox" style="width: 300px;">
-						<ui:repeat var="foto" value="#{imovelBean.imovel.fotos}">
-							<h:outputLink value="#{foto.url}">
-								<h:graphicImage value="#{foto.url}"
-									style="float: left; height: 50px; margin: 2px;" />
-							</h:outputLink>
-						</ui:repeat>
-					</p:lightBox>
-
-					<p:outputLabel for="vComentarios" value="Comentários" />
-					<h:outputText id="vComentarios"
-						value="#{imovelBean.imovel.comentarios == null ? '-' : imovelBean.imovel.comentarios}" />
-				</h:panelGrid>
-			</h:form>
-		</p:dialog>
 
 		<p:dialog widgetVar="salvar" appendTo="@(body)" header="Novo Imóvel"
 			modal="true" resizable="false">

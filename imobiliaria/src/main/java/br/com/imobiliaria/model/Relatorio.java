@@ -36,7 +36,6 @@ public class Relatorio implements Serializable {
 
 		JasperPrint relatorio = JasperFillManager.fillReport(caminho, parametros, conexao);
 		
-		//JasperPrintManager.printReport(relatorio, true);
 		File pdf = File.createTempFile("output.", ".pdf");
 		JasperExportManager.exportReportToPdfStream(relatorio, new FileOutputStream(pdf));
 	}

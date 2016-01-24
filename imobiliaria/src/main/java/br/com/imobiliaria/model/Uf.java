@@ -24,14 +24,24 @@ public class Uf implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	@NotNull
+	@SiglaUF
+	@Column(length=2, nullable=false)
 	private String sigla;
+	
+	@NotBlank
+	@Size(min=3, max=50)
+	@Column(length=50, nullable=false)
 	private String nome;
+	
+	@OneToMany(mappedBy="uf", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Cidade> cidades;
 
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
@@ -40,9 +50,6 @@ public class Uf implements Serializable {
 		this.id = id;
 	}
 
-	@NotNull
-	@SiglaUF
-	@Column(length=2, nullable=false)
 	public String getSigla() {
 		return sigla;
 	}
@@ -51,9 +58,6 @@ public class Uf implements Serializable {
 		this.sigla = sigla.toUpperCase();
 	}
 
-	@NotBlank
-	@Size(min=3, max=50)
-	@Column(length=50, nullable=false)
 	public String getNome() {
 		return nome;
 	}
@@ -62,7 +66,6 @@ public class Uf implements Serializable {
 		this.nome = nome;
 	}
 	
-	@OneToMany(mappedBy="uf", cascade=CascadeType.ALL, orphanRemoval=true)
 	public List<Cidade> getCidades() {
 		return cidades;
 	}
