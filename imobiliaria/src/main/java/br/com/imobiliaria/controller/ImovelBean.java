@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
@@ -14,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.io.FilenameUtils;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -187,6 +190,16 @@ public class ImovelBean implements Serializable {
 		return uploadedFotos.size();
 	}
 	
+	public void abrirModalVer(Imovel imovel) {
+		this.imovel = imovel;
+		
+		Map<String, Object> atributos = new HashMap<>();
+		atributos.put("modal", true);
+		atributos.put("resizable", false);
+		
+		RequestContext.getCurrentInstance().openDialog("ver", atributos, null);
+	}
+
 }
 
 
